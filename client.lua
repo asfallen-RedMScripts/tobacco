@@ -663,7 +663,7 @@ AddEventHandler('prop:chewingtobacco', function()
             Wait(10)
         end
 
-        if IsControlJustReleased(0, 0x07B8BEAF) then
+        if IsControlJustReleased(0, Config.Prompts.SmokeKey) then
             local random = math.random(1, 9)
             if stance == "MaleA" then
                 randomdict = MaleA[random]['dict']
@@ -696,7 +696,7 @@ AddEventHandler('prop:chewingtobacco', function()
             Wait(100)
         end
 
-        if IsControlJustReleased(0, 0xD51B784F) then
+        if IsControlJustReleased(0, Config.Prompts.ChangeKey) then
             if stance == "MaleA" then
                 Anim(ped, "amb_misc@world_human_chew_tobacco@male_a@trans", "a_trans_b", -1, 30)
                 PromptSetEnabled(PropPrompt, false)
