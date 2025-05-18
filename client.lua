@@ -151,6 +151,7 @@ AddEventHandler('prop:cigaret', function()
                 ClearPedSecondaryTask(ped)
                 ClearPedTasks(ped)
                 Wait(10)
+                 TriggerServerEvent('smoke:stop')
             end
             if IsControlJustReleased(0, Config.Prompts.ChangeKey) then
                 if stance == "c" then
@@ -270,6 +271,7 @@ AddEventHandler('prop:cigaret', function()
                 ClearPedSecondaryTask(ped)
                 ClearPedTasks(ped)
                 Wait(10)
+                TriggerServerEvent('smoke:stop')
             end
             if IsControlJustReleased(0, Config.Prompts.ChangeKey) then
                 if stance == "c" then
