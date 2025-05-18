@@ -141,7 +141,7 @@ AddEventHandler('prop:cigaret', function()
                 PromptSetEnabled(ChangeStance, false)
                 PromptSetVisible(ChangeStance, false)
                 proppromptdisplayed = false
-
+                TriggerServerEvent('smoke:stop')
                 ClearPedSecondaryTask(ped)
                 Anim(ped, "amb_rest@world_human_smoking@male_a@stand_exit", "exit_back", -1, 1)
                 Wait(2800)
@@ -151,7 +151,6 @@ AddEventHandler('prop:cigaret', function()
                 ClearPedSecondaryTask(ped)
                 ClearPedTasks(ped)
                 Wait(10)
-                 TriggerServerEvent('smoke:stop')
             end
             if IsControlJustReleased(0, Config.Prompts.ChangeKey) then
                 if stance == "c" then
@@ -255,6 +254,7 @@ AddEventHandler('prop:cigaret', function()
             or IsEntityPlayingAnim(ped, "amb_rest@world_human_smoking@female_a@base", "base", 3) do
             Wait(5)
             if IsControlJustReleased(0, Config.Prompts.DropKey) then
+                TriggerServerEvent('smoke:stop')
                 PromptSetEnabled(PropPrompt, false)
                 PromptSetVisible(PropPrompt, false)
                 PromptSetEnabled(UsePrompt, false)
@@ -271,7 +271,6 @@ AddEventHandler('prop:cigaret', function()
                 ClearPedSecondaryTask(ped)
                 ClearPedTasks(ped)
                 Wait(10)
-                TriggerServerEvent('smoke:stop')
             end
             if IsControlJustReleased(0, Config.Prompts.ChangeKey) then
                 if stance == "c" then
@@ -387,7 +386,7 @@ end)
 
 RegisterNetEvent('prop:cigar')
 AddEventHandler('prop:cigar', function()
-    Citizen.InvokeNative( 0xF6A7C08DF2E28B28, PlayerPedId(), 0, 1000.0, false )
+    Citizen.InvokeNative(0xF6A7C08DF2E28B28, PlayerPedId(), 0, 1000.0, false)
     PlaySoundFrontend("Core_Full", "Consumption_Sounds", true, 0)
     ExecuteCommand('close')
     FPrompt(Config.Drop, Config.Prompts.DropKey, false)
@@ -434,7 +433,7 @@ AddEventHandler('prop:cigar', function()
                 DisableControlAction(0, 0x8FFC75D6, true)
                 DisableControlAction(0, 0xD9D0E1C0, true)
 
-                if IsControlPressed(0, 0x3B24C470) then
+                if IsControlPressed(0, Config.Prompts.DropKey) then
                     PromptSetEnabled(PropPrompt, false)
                     PromptSetVisible(PropPrompt, false)
                     proppromptdisplayed = false
@@ -442,6 +441,7 @@ AddEventHandler('prop:cigar', function()
                     ClearPedSecondaryTask(ped)
                     DeleteObject(prop)
                     RemoveAnimDict(dict)
+                     TriggerServerEvent('smoke:stop')
                     break
                 end
             else
@@ -461,14 +461,14 @@ AddEventHandler('prop:pipe_smoker', function()
     local ped = PlayerPedId()
     local male = IsPedMale(ped)
     local x, y, z = table.unpack(GetEntityCoords(ped, true))
-    local pipe= CreateObject(GetHashKey('P_PIPE01X'), x, y, z + 0.2, true, true, true)
+    local pipe = CreateObject(GetHashKey('P_PIPE01X'), x, y, z + 0.2, true, true, true)
     local righthand = GetEntityBoneIndexByName(ped, "SKEL_R_Finger13")
     AttachEntityToEntity(pipe, ped, righthand, 0.005, -0.045, 0.0, -170.0, 10.0, -15.0, true, true, false, true, 1, true)
-    Anim(ped,"amb_wander@code_human_smoking_wander@male_b@trans","nopipe_trans_pipe",-1,30)
+    Anim(ped, "amb_wander@code_human_smoking_wander@male_b@trans", "nopipe_trans_pipe", -1, 30)
     Wait(9000)
-    Anim(ped,"amb_rest@world_human_smoking@male_b@base","base",-1,31)
+    Anim(ped, "amb_rest@world_human_smoking@male_b@base", "base", -1, 31)
 
-    while not IsEntityPlayingAnim(ped,"amb_rest@world_human_smoking@male_b@base","base", 3) do
+    while not IsEntityPlayingAnim(ped, "amb_rest@world_human_smoking@male_b@base", "base", 3) do
         Wait(100)
     end
 
@@ -481,12 +481,11 @@ AddEventHandler('prop:pipe_smoker', function()
         PromptSetEnabled(ChangeStance, true)
         PromptSetVisible(ChangeStance, true)
         proppromptdisplayed = true
-	end
+    end
 
-    while IsEntityPlayingAnim(ped, "amb_rest@world_human_smoking@male_b@base","base", 3) do
-
+    while IsEntityPlayingAnim(ped, "amb_rest@world_human_smoking@male_b@base", "base", 3) do
         Wait(2)
-		if IsControlJustReleased(0, 0x3B24C470) then
+        if IsControlJustReleased(0, Config.Prompts.DropKey) then
             PromptSetEnabled(PropPrompt, false)
             PromptSetVisible(PropPrompt, false)
             PromptSetEnabled(UsePrompt, false)
@@ -495,22 +494,23 @@ AddEventHandler('prop:pipe_smoker', function()
             PromptSetVisible(ChangeStance, false)
             proppromptdisplayed = false
 
+            TriggerServerEvent('smoke:stop')
             Anim(ped, "amb_wander@code_human_smoking_wander@male_b@trans", "pipe_trans_nopipe", -1, 30)
             Wait(6066)
             DeleteEntity(pipe)
             ClearPedSecondaryTask(ped)
             ClearPedTasks(ped)
             Wait(10)
-		end
-        
-        if IsControlJustReleased(0, 0xD51B784F) then
+        end
+
+        if IsControlJustReleased(0, Confi.Prompts.ChangeKey) then
             Anim(ped, "amb_rest@world_human_smoking@pipe@proper@male_d@wip_base", "wip_base", -1, 30)
             Wait(5000)
-            Anim(ped, "amb_rest@world_human_smoking@male_b@base","base", -1, 31)
+            Anim(ped, "amb_rest@world_human_smoking@male_b@base", "base", -1, 31)
             Wait(100)
         end
 
-        if IsControlJustReleased(0, 0x07B8BEAF) then
+        if IsControlJustReleased(0, Config.Prompts.SmokeKey) then
             if healing then
                 local amount = 10
                 if lesshealing then
@@ -523,12 +523,12 @@ AddEventHandler('prop:pipe_smoker', function()
                     Citizen.InvokeNative(0xC6258F41D86676E0, ped, 0, 100)
                 end
             end
-            Anim(ped, "amb_rest@world_human_smoking@male_b@idle_a","idle_a", -1, 30, 0)
+            Anim(ped, "amb_rest@world_human_smoking@male_b@idle_a", "idle_a", -1, 30, 0)
             Wait(22600)
-            Anim(ped, "amb_rest@world_human_smoking@male_b@base","base", -1, 31, 0)
+            Anim(ped, "amb_rest@world_human_smoking@male_b@base", "base", -1, 31, 0)
             Wait(100)
 
-        --[[
+            --[[
                         Anim(ped, "amb_rest@world_human_smoking@male_b@idle_b","idle_d", -1, 30, 0)
             Wait(15599)
             Anim(ped, "amb_rest@world_human_smoking@male_b@base","base", -1, 31, 0)
@@ -579,33 +579,33 @@ AddEventHandler('prop:chewingtobacco', function()
     local basedictB = "amb_misc@world_human_chew_tobacco@male_b@base"
     local MaleA =
     {
-        [1] = { ['dict'] = "amb_misc@world_human_chew_tobacco@male_a@idle_a",['anim'] = "idle_a" },
-        [2] = { ['dict'] = "amb_misc@world_human_chew_tobacco@male_a@idle_a",['anim'] = "idle_b" },
-        [3] = { ['dict'] = "amb_misc@world_human_chew_tobacco@male_a@idle_a",['anim'] = "idle_c" },
-        [4] = { ['dict'] = "amb_misc@world_human_chew_tobacco@male_a@idle_b",['anim'] = "idle_d" },
-        [5] = { ['dict'] = "amb_misc@world_human_chew_tobacco@male_a@idle_b",['anim'] = "idle_e" },
-        [6] = { ['dict'] = "amb_misc@world_human_chew_tobacco@male_a@idle_b",['anim'] = "idle_f" },
-        [7] = { ['dict'] = "amb_misc@world_human_chew_tobacco@male_a@idle_c",['anim'] = "idle_g" },
-        [8] = { ['dict'] = "amb_misc@world_human_chew_tobacco@male_a@idle_c",['anim'] = "idle_h" },
-        [9] = { ['dict'] = "amb_misc@world_human_chew_tobacco@male_a@idle_c",['anim'] = "idle_i" },
-        [7] = { ['dict'] = "amb_misc@world_human_chew_tobacco@male_a@idle_d",['anim'] = "idle_j" },
-        [8] = { ['dict'] = "amb_misc@world_human_chew_tobacco@male_a@idle_d",['anim'] = "idle_k" },
-        [9] = { ['dict'] = "amb_misc@world_human_chew_tobacco@male_a@idle_d",['anim'] = "idle_l" }
+        [1] = { ['dict'] = "amb_misc@world_human_chew_tobacco@male_a@idle_a", ['anim'] = "idle_a" },
+        [2] = { ['dict'] = "amb_misc@world_human_chew_tobacco@male_a@idle_a", ['anim'] = "idle_b" },
+        [3] = { ['dict'] = "amb_misc@world_human_chew_tobacco@male_a@idle_a", ['anim'] = "idle_c" },
+        [4] = { ['dict'] = "amb_misc@world_human_chew_tobacco@male_a@idle_b", ['anim'] = "idle_d" },
+        [5] = { ['dict'] = "amb_misc@world_human_chew_tobacco@male_a@idle_b", ['anim'] = "idle_e" },
+        [6] = { ['dict'] = "amb_misc@world_human_chew_tobacco@male_a@idle_b", ['anim'] = "idle_f" },
+        [7] = { ['dict'] = "amb_misc@world_human_chew_tobacco@male_a@idle_c", ['anim'] = "idle_g" },
+        [8] = { ['dict'] = "amb_misc@world_human_chew_tobacco@male_a@idle_c", ['anim'] = "idle_h" },
+        [9] = { ['dict'] = "amb_misc@world_human_chew_tobacco@male_a@idle_c", ['anim'] = "idle_i" },
+        [7] = { ['dict'] = "amb_misc@world_human_chew_tobacco@male_a@idle_d", ['anim'] = "idle_j" },
+        [8] = { ['dict'] = "amb_misc@world_human_chew_tobacco@male_a@idle_d", ['anim'] = "idle_k" },
+        [9] = { ['dict'] = "amb_misc@world_human_chew_tobacco@male_a@idle_d", ['anim'] = "idle_l" }
     }
     local MaleB =
     {
-        [1] = { ['dict'] = "amb_misc@world_human_chew_tobacco@male_b@idle_a",['anim'] = "idle_a" },
-        [2] = { ['dict'] = "amb_misc@world_human_chew_tobacco@male_b@idle_a",['anim'] = "idle_b" },
-        [3] = { ['dict'] = "amb_misc@world_human_chew_tobacco@male_b@idle_a",['anim'] = "idle_c" },
-        [4] = { ['dict'] = "amb_misc@world_human_chew_tobacco@male_b@idle_b",['anim'] = "idle_d" },
-        [5] = { ['dict'] = "amb_misc@world_human_chew_tobacco@male_b@idle_b",['anim'] = "idle_e" },
-        [6] = { ['dict'] = "amb_misc@world_human_chew_tobacco@male_b@idle_b",['anim'] = "idle_f" },
-        [7] = { ['dict'] = "amb_misc@world_human_chew_tobacco@male_b@idle_c",['anim'] = "idle_g" },
-        [8] = { ['dict'] = "amb_misc@world_human_chew_tobacco@male_b@idle_c",['anim'] = "idle_h" },
-        [9] = { ['dict'] = "amb_misc@world_human_chew_tobacco@male_b@idle_c",['anim'] = "idle_i" },
-        [7] = { ['dict'] = "amb_misc@world_human_chew_tobacco@male_b@idle_d",['anim'] = "idle_j" },
-        [8] = { ['dict'] = "amb_misc@world_human_chew_tobacco@male_b@idle_d",['anim'] = "idle_k" },
-        [9] = { ['dict'] = "amb_misc@world_human_chew_tobacco@male_b@idle_d",['anim'] = "idle_l" }
+        [1] = { ['dict'] = "amb_misc@world_human_chew_tobacco@male_b@idle_a", ['anim'] = "idle_a" },
+        [2] = { ['dict'] = "amb_misc@world_human_chew_tobacco@male_b@idle_a", ['anim'] = "idle_b" },
+        [3] = { ['dict'] = "amb_misc@world_human_chew_tobacco@male_b@idle_a", ['anim'] = "idle_c" },
+        [4] = { ['dict'] = "amb_misc@world_human_chew_tobacco@male_b@idle_b", ['anim'] = "idle_d" },
+        [5] = { ['dict'] = "amb_misc@world_human_chew_tobacco@male_b@idle_b", ['anim'] = "idle_e" },
+        [6] = { ['dict'] = "amb_misc@world_human_chew_tobacco@male_b@idle_b", ['anim'] = "idle_f" },
+        [7] = { ['dict'] = "amb_misc@world_human_chew_tobacco@male_b@idle_c", ['anim'] = "idle_g" },
+        [8] = { ['dict'] = "amb_misc@world_human_chew_tobacco@male_b@idle_c", ['anim'] = "idle_h" },
+        [9] = { ['dict'] = "amb_misc@world_human_chew_tobacco@male_b@idle_c", ['anim'] = "idle_i" },
+        [7] = { ['dict'] = "amb_misc@world_human_chew_tobacco@male_b@idle_d", ['anim'] = "idle_j" },
+        [8] = { ['dict'] = "amb_misc@world_human_chew_tobacco@male_b@idle_d", ['anim'] = "idle_k" },
+        [9] = { ['dict'] = "amb_misc@world_human_chew_tobacco@male_b@idle_d", ['anim'] = "idle_l" }
     }
     local stance = "MaleA"
 
@@ -645,7 +645,7 @@ AddEventHandler('prop:chewingtobacco', function()
 
     while IsEntityPlayingAnim(ped, basedict, "base", 3) or IsEntityPlayingAnim(ped, basedictB, "base", 3) do
         Wait(5)
-        if IsControlJustReleased(0, 0x3B24C470) then
+        if IsControlJustReleased(0, Config.Prompts.DropKey) then
             PromptSetEnabled(PropPrompt, false)
             PromptSetVisible(PropPrompt, false)
             PromptSetEnabled(UsePrompt, false)
@@ -653,6 +653,8 @@ AddEventHandler('prop:chewingtobacco', function()
             PromptSetEnabled(ChangeStance, false)
             PromptSetVisible(ChangeStance, false)
             proppromptdisplayed = false
+
+             TriggerServerEvent('smoke:stop')
 
             Anim(ped, "amb_misc@world_human_chew_tobacco@male_b@idle_b", "idle_d", 5500, 30)
             Wait(5500)
