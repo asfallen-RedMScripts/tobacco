@@ -14,4 +14,4 @@ This repository contains an RSG version adaptation of the original Heros_Tobacco
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/heros_tobacco-rsg.git
+   git clone https://github.com/asfallen-RedMScripts/tobacco.git
