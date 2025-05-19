@@ -19,7 +19,7 @@ local cigStages      = {
 
 local chewStages = {
     "chewingtobacco5",
-    "chewingtobacco4", 
+    "chewingtobacco4",
     "chewingtobacco3",
     "chewingtobacco2",
     "chewingtobacco"
@@ -36,25 +36,25 @@ local function notify(src, title, msg, ntype)
 end
 
 local function canSmoke(source)
-    -- 1) Hâlihazırda içiyorsan engelle
     if smoking[source] then
-        notify(source, 'Hata', 'Zaten bir şey içiyorsun!', 'error')
+        TriggerClientEvent('ox_lib:notify', source,
+            { title = "Hata", description = "Zaten bir şey içiyorsun!", type = "error" })
         return false
     end
-
-    -- 2) Cooldown kontrolü
     local now  = GetGameTimer()
     local last = lastSmoke[source] or 0
     if now - last < SMOKE_COOLDOWN then
         local rem = math.ceil((SMOKE_COOLDOWN - (now - last)) / 1000)
-        notify(source, 'Bekle', rem .. " saniye sonra tekrar içebilirsin", 'error')
+        TriggerClientEvent('ox_lib:notify', source,
+            { title = "Bekle", description = rem .. " saniye sonra tekrar içebilirsin", type = "error" })
         return false
     end
-
-    -- 3) Başlat ve cooldown’u güncelle
-    smoking[source]   = true
-    lastSmoke[source] = now
     return true
+end
+
+local function startSmoking(source)
+    smoking[source]   = true
+    lastSmoke[source] = GetGameTimer()
 end
 
 -- Helper: önce çakmak bak, yoksa kibrit sil
@@ -71,7 +71,7 @@ RSGCore.Functions.CreateUseableItem("pipe_smoker", function(source, item)
     local ok2 = exports['rsg-inventory']:RemoveItem(source, Config.ItemNeed2, 1, nil, 'pipe_smoker')
     if not ok2 then return notify(source, 'Hata', Config.Text.Pipe, 'error') end
     TriggerClientEvent('prop:pipe_smoker', source)
-    -- pipo tütünü sayısını bildir
+    startSmoking(source)
     local rem = exports['rsg-inventory']:GetItemCount(source, Config.ItemNeed2)
     if rem > 0 then
         notify(source, 'Başarılı', rem .. " doz pipo tütünü kaldı", 'success')
@@ -91,6 +91,7 @@ RSGCore.Functions.CreateUseableItem("cigar", function(source, item)
     end
 
     TriggerClientEvent('prop:cigar', source)
+    startSmoking(source)
     notify(source, 'Başarılı', 'Puro içildi', 'success')
 end)
 
@@ -102,6 +103,7 @@ RSGCore.Functions.CreateUseableItem("cigarette", function(source, item)
         return notify(source, 'Hata', Config.Text.Allumettes, 'error')
     end
     TriggerClientEvent('prop:cigaret', source)
+    startSmoking(source)
 end)
 
 
@@ -119,7 +121,7 @@ for i, itemName in ipairs(cigStages) do
         if nextItem then exports['rsg-inventory']:AddItem(source, nextItem, 1) end
 
         TriggerClientEvent('prop:cigaret', source)
-
+        startSmoking(source)
         local remaining = #cigStages - i
         if remaining > 0 then
             notify(source, 'Başarılı', remaining .. " tane sigara kaldı", 'success')
@@ -142,7 +144,7 @@ for i, itemName in ipairs(chewStages) do
         if nextItem then exports['rsg-inventory']:AddItem(source, nextItem, 1) end
 
         TriggerClientEvent('prop:chewingtobacco', source)
-
+        startSmoking(source)
         local remaining = #chewStages - i
         if remaining > 0 then
             notify(source, 'Başarılı', remaining .. " doz çiğneme tütünü kaldı", 'success')

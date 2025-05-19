@@ -441,7 +441,7 @@ AddEventHandler('prop:cigar', function()
                     ClearPedSecondaryTask(ped)
                     DeleteObject(prop)
                     RemoveAnimDict(dict)
-                     TriggerServerEvent('smoke:stop')
+                    TriggerServerEvent('smoke:stop')
                     break
                 end
             else
@@ -493,7 +493,6 @@ AddEventHandler('prop:pipe_smoker', function()
             PromptSetEnabled(ChangeStance, false)
             PromptSetVisible(ChangeStance, false)
             proppromptdisplayed = false
-
             TriggerServerEvent('smoke:stop')
             Anim(ped, "amb_wander@code_human_smoking_wander@male_b@trans", "pipe_trans_nopipe", -1, 30)
             Wait(6066)
@@ -503,14 +502,14 @@ AddEventHandler('prop:pipe_smoker', function()
             Wait(10)
         end
 
-        if IsControlJustReleased(0, Confi.Prompts.ChangeKey) then
+        if IsControlJustReleased(0, Config.Prompts.ChangeKey) then
             Anim(ped, "amb_rest@world_human_smoking@pipe@proper@male_d@wip_base", "wip_base", -1, 30)
             Wait(5000)
             Anim(ped, "amb_rest@world_human_smoking@male_b@base", "base", -1, 31)
             Wait(100)
         end
 
-        if IsControlJustReleased(0, Config.Prompts.SmokeKey) then
+        if IsControlJustReleased(0,Config.Prompts.SmokeKey) then
             if healing then
                 local amount = 10
                 if lesshealing then
@@ -654,7 +653,7 @@ AddEventHandler('prop:chewingtobacco', function()
             PromptSetVisible(ChangeStance, false)
             proppromptdisplayed = false
 
-             TriggerServerEvent('smoke:stop')
+            TriggerServerEvent('smoke:stop')
 
             Anim(ped, "amb_misc@world_human_chew_tobacco@male_b@idle_b", "idle_d", 5500, 30)
             Wait(5500)
